@@ -1,4 +1,4 @@
-import { Box, Center, Container, Flex, Image, VStack } from "@chakra-ui/react";
+import { Box, Container, Flex, Image, VStack } from "@chakra-ui/react";
 import React from "react";
 import AuthForm from "../../components/AuthForm/AuthForm";
 import playstore from "../../assets/playstore.png"
