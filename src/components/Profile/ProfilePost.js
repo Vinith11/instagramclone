@@ -1,4 +1,7 @@
 import {
+  Avatar,
+  Box,
+  Divider,
   Flex,
   GridItem,
   Image,
@@ -6,17 +9,23 @@ import {
   ModalBody,
   ModalCloseButton,
   ModalContent,
-  ModalHeader,
   ModalOverlay,
   Text,
+  VStack,
   useDisclosure,
 } from "@chakra-ui/react";
 import React from "react";
 import { AiFillHeart } from "react-icons/ai";
 import { FaComment } from "react-icons/fa";
+import { MdDelete } from "react-icons/md";
+import img2 from"../../assets/img2.png"
+import img4 from"../../assets/img4.png"
+import img3 from"../../assets/img3.png"
+import Comment from "../Comment/Comment";
+import PostFooter from "../Feedposts/PostFooter";
 
 function ProfilePost({ imgV }) {
-  const {isOpen, onOpen, onClose} = useDisclosure();
+  const { isOpen, onOpen, onClose } = useDisclosure();
   return (
     <>
       <GridItem
@@ -59,15 +68,89 @@ function ProfilePost({ imgV }) {
           </Flex>
         </Flex>
 
-        <Image src={imgV} alt="post" w={"100%"} h={"100%"} objectFit={"cover"} />
+        <Image
+          src={imgV}
+          alt="post"
+          w={"100%"}
+          h={"100%"}
+          objectFit={"cover"}
+        />
       </GridItem>
 
-      <Modal isOpen={isOpen} onClose={onClose}>
+      <Modal
+        isOpen={isOpen}
+        onClose={onClose}
+        isCentered={true}
+        size={{ base: "3xl", md: "5xl" }}
+      >
         <ModalOverlay />
         <ModalContent>
-          <ModalHeader>Movie Title</ModalHeader>
           <ModalCloseButton />
-          <ModalBody>Lorem 2</ModalBody>
+          <ModalBody bg={"black"} pb={5}>
+            <Flex
+              gap={4}
+              w={{ base: "90%", sm: "70%", md: "full" }}
+              mx={"auto"}
+            >
+              <Box
+                borderRadius={4}
+                overflow={"hidden"}
+                border={"1px solid"}
+                borderColor={"whiteAlpha.300"}
+                flex={1.5}
+              >
+                <Image src={imgV} alt="post" />
+              </Box>
+              <Flex
+                flex={1}
+                flexDir={"column"}
+                px={10}
+                display={{ base: "none", md: "flex" }}
+              >
+                <Flex alignItems={"center"} justifyContent={"space-between"}>
+                  <Flex alignItems={"center"} gap={4}>
+                    <Avatar src="../../assets/img1.png" size={"sm"} name="aa" />
+                    <Text fontWeight={"bold"} fontSize={12}>
+                      aa
+                    </Text>
+                  </Flex>
+                  <Box
+                    _hover={{ bg: "whiteAlpha.300", color: "red.600" }}
+                    borderRadius={4}
+                    p={1}
+                  >
+                    <MdDelete size={20} cursor="pointer" />
+                  </Box>
+                </Flex>
+                <Divider my={4} bg={"gray.500"}/>
+                
+                <VStack w={"full"} alignItems={"start"} maxH={"350px"} overflow={"auto"}>
+                  <Comment
+                    createdAt='1d'
+                    username='bb'
+                    profilePic={img2}
+                    text={"Nice"}
+                  />
+                  <Comment
+                    createdAt='2d'
+                    username='cc'
+                    profilePic={img3}
+                    text={"Ni   ce"}
+                  />
+                  <Comment
+                    createdAt='3d'
+                    username='dd'
+                    profilePic={img4}
+                    text={"Nic     e"}
+                  />
+
+                </VStack>
+
+                <Divider my={4} bg={"gray.800"}/>
+                <PostFooter isProfilePage={true}/>
+              </Flex>
+            </Flex>
+          </ModalBody>
         </ModalContent>
       </Modal>
     </>
