@@ -4,7 +4,7 @@ import google from "../../assets/google.png";
 import { auth, firestore } from "../../firebase/firebase";
 import { useSignInWithGoogle } from "react-firebase-hooks/auth";
 import useAuthStore from "../../store/authStore";
-import { doc, setDoc } from "firebase/firestore";
+import { doc, getDoc, setDoc } from "firebase/firestore";
 
 function GoogleAuth({prefix}) {
   const [signInWithGoogle, error] = useSignInWithGoogle(auth);
@@ -21,7 +21,18 @@ function GoogleAuth({prefix}) {
         return;
       }
 
-      if(newUser){
+      const useRef = doc(firestore, "users", newUser.user.uid);
+      const userSnap = await getDoc(useRef);
+
+      if(userSnap.exists()){
+        //login
+        const userDoc = userSnap.data();
+        localStorage.setItem("user-info", JSON.stringify(userDoc));
+        loginUser(userDoc);
+        
+      }
+      else{
+        // sign up
         const userDoc = {
           uid: newUser.user.uid,
           email: newUser.user.email,
