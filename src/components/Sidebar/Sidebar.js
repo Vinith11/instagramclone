@@ -14,7 +14,7 @@ import useLogout from "../../hooks/useLogout";
 // import SidebarItems from "./SidebarItems";
 
 const Sidebar = () => {
-  const { handleLogOut, isLoggingOut } = useLogout();
+  const { handleLogout, isLoggingOut } = useLogout();
 
   const sidebarItems = [
     {
@@ -118,25 +118,26 @@ const Sidebar = () => {
           display={{ base: "block", md: "none" }}
         >
           <Flex
-            onClick={handleLogOut}
-            alignItems={"center"}
-            gap={4}
-            _hover={{ bg: "whiteAlpha.400" }}
-            borderRadius={6}
-            p={2}
-            w={{ base: 10, md: "full" }}
-            mt={"auto"}
-            justifyContent={{ base: "center", md: "flex-start" }}
-          >
-            <BiLogOut size={25} />
-            <Button
-              variant={"ghost"}
-              _hover={{ bg: "transparent" }}
-              display={{ base: "none", md: "block" }}
-            >
-              Log out
-            </Button>
-          </Flex>
+						onClick={handleLogout}
+						alignItems={"center"}
+						gap={4}
+						_hover={{ bg: "whiteAlpha.400" }}
+						borderRadius={6}
+						p={2}
+						w={{ base: 10, md: "full" }}
+						mt={"auto"}
+						justifyContent={{ base: "center", md: "flex-start" }}
+					>
+						<BiLogOut size={25} />
+						<Button
+							display={{ base: "none", md: "block" }}
+							variant={"ghost"}
+							_hover={{ bg: "transparent" }}
+							isLoading={isLoggingOut}
+						>
+							Logout
+						</Button>
+					</Flex>
         </Tooltip>
       </Flex>
     </Box>

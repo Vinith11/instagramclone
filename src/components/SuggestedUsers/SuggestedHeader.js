@@ -4,7 +4,7 @@ import useAuthStore from "../../store/authStore";
 import { Link } from "react-router-dom";
 
 const SuggestedHeader = () => {
-	const { handleLogOut, isLoggingOut } = useLogout();
+	const { handleLogout, isLoggingOut } = useLogout();
 	const authUser = useAuthStore((state) => state.user);
 
 	if (!authUser) return null;
@@ -28,7 +28,7 @@ const SuggestedHeader = () => {
 				fontSize={14}
 				fontWeight={"medium"}
 				color={"blue.400"}
-				onClick={handleLogOut}
+				onClick={handleLogout}
 				isLoading={isLoggingOut}
 				cursor={"pointer"}
 			>

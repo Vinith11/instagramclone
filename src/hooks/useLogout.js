@@ -1,26 +1,24 @@
-import useShowToast  from './useShowToast'
-import { auth } from '../firebase/firebase'
-import { useSignOut } from 'react-firebase-hooks/auth'
-import useAuthStore from '../store/authStore';
+import { useSignOut } from "react-firebase-hooks/auth";
+import { auth } from "../firebase/firebase";
+import useShowToast from "./useShowToast";
+import useAuthStore from "../store/authStore";
 
-function useLogout() {
+const useLogout = () => {
+	const [signOut, isLoggingOut, error] = useSignOut(auth);
+	const showToast = useShowToast();
+	const logoutUser = useAuthStore((state) => state.logout);
 
-    const [signOut, loading, error] = useSignOut(auth)
-    const showToast = useShowToast();
-    const logoutUser = useAuthStore((state) => state.logout)
-    
-    const handleLogOut = async () => {
-        try {
-            await signOut();
-            localStorage.removeItem('user-info');
-            logoutUser();            
-            
-        } catch (error) {
-            showToast("Error", error.message, "error");
-        }
-    }
+	const handleLogout = async () => {
+		try {
+			await signOut();
+			localStorage.removeItem("user-info");
+			logoutUser();
+		} catch (error) {
+			showToast("Error", error.message, "error");
+		}
+	};
 
-  return {handleLogOut, loading, error}
-}
+	return { handleLogout, isLoggingOut, error };
+};
 
-export default useLogout
+export default useLogout;

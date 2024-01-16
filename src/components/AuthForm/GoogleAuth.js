@@ -1,72 +1,62 @@
-import { Flex, Image, Text, useToast } from "@chakra-ui/react";
-import React from "react";
-import google from "../../assets/google.png";
-import { auth, firestore } from "../../firebase/firebase";
+import { Flex, Image, Text } from "@chakra-ui/react";
 import { useSignInWithGoogle } from "react-firebase-hooks/auth";
+import { auth, firestore } from "../../firebase/firebase";
+import useShowToast from "../../hooks/useShowToast";
 import useAuthStore from "../../store/authStore";
 import { doc, getDoc, setDoc } from "firebase/firestore";
+import googleLog from "../../assets/google.png";
 
-function GoogleAuth({prefix}) {
-  const [signInWithGoogle, error] = useSignInWithGoogle(auth);
+const GoogleAuth = ({ prefix }) => {
+	const [signInWithGoogle, , , error] = useSignInWithGoogle(auth);
+	const showToast = useShowToast();
+	const loginUser = useAuthStore((state) => state.login);
 
-  const showToast = useToast();
-  const loginUser = useAuthStore((state) => state.login);
+	const handleGoogleAuth = async () => {
+		try {
+			const newUser = await signInWithGoogle();
+			if (!newUser && error) {
+				showToast("Error", error.message, "error");
+				return;
+			}
+			const userRef = doc(firestore, "users", newUser.user.uid);
+			const userSnap = await getDoc(userRef);
 
-  const handleGoogleAuth = async () => {
-    try {
+			if (userSnap.exists()) {
+				// login
+				const userDoc = userSnap.data();
+				localStorage.setItem("user-info", JSON.stringify(userDoc));
+				loginUser(userDoc);
+			} else {
+				// signup
+				const userDoc = {
+					uid: newUser.user.uid,
+					email: newUser.user.email,
+					username: newUser.user.email.split("@")[0],
+					fullName: newUser.user.displayName,
+					bio: "",
+					profilePicURL: newUser.user.photoURL,
+					followers: [],
+					following: [],
+					posts: [],
+					createdAt: Date.now(),
+				};
+				await setDoc(doc(firestore, "users", newUser.user.uid), userDoc);
+				localStorage.setItem("user-info", JSON.stringify(userDoc));
+				loginUser(userDoc);
+			}
+		} catch (error) {
+			showToast("Error", error.message, "error");
+		}
+	};
 
-      const newUser = await signInWithGoogle();
-      if(!newUser && error){
-        showToast("Error", error.message, "error")
-        return;
-      }
-
-      const useRef = doc(firestore, "users", newUser.user.uid);
-      const userSnap = await getDoc(useRef);
-
-      if(userSnap.exists()){
-        //login
-        const userDoc = userSnap.data();
-        localStorage.setItem("user-info", JSON.stringify(userDoc));
-        loginUser(userDoc);
-        
-      }
-      else{
-        // sign up
-        const userDoc = {
-          uid: newUser.user.uid,
-          email: newUser.user.email,
-          fullname: newUser.user.displayName,
-          username: newUser.user.email.split("@")[0],
-          bio: "",
-          profilePicURL: newUser.user.photoURL,
-          followers: [],
-          following: [],
-          posts: [],
-          createdAt: Date.now(),
-        };
-        await setDoc(doc(firestore, "users", newUser.user.uid), userDoc);
-
-        localStorage.setItem("user-info", JSON.stringify(userDoc));
-        loginUser(userDoc);
-      }
-      
-    } catch (error) {
-      showToast("Error", error.message, "error")
-    }
-  }
-    
-
-  return (
-    <Flex alignItems={"center"} cursor={"pointer"} justifyContent={"center"}
-    onClick={handleGoogleAuth}
-    >
-      <Image src={google} w={5} alt="google logo" />
-      <Text mx={2} color={"blue.500"}>
-        {prefix} with Google
-      </Text>
-    </Flex>
-  );
-}
+	return (
+		<Flex alignItems={"center"} justifyContent={"center"} cursor={"pointer"} onClick={handleGoogleAuth}>
+			<Image src={googleLog} w={5} alt='Google logo' />
+			<Text mx='2' color={"blue.500"}>
+				{prefix} with Google
+			</Text>
+		</Flex>
+	);
+};
 
 export default GoogleAuth;
