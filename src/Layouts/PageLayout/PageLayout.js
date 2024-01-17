@@ -7,10 +7,18 @@ import { auth } from "../../firebase/firebase";
 import Navbar from "../../components/Navbar/Navbar";
 
 function PageLayout({ children }) {
+  // useLocation hook to get the current location object
   const { pathname } = useLocation();
+
+  // loading: A boolean to indicate whether the authentication state is still being loaded
   const [user, loading] = useAuthState(auth);
+
+  // The sidebar should not be rendered if the current path is "/auth" or if there is no authenticated user
   const canRenderSidebar = pathname !== "/auth" && user;
-  const canRenderNavbar = !user && !loading && pathname !== "/auth";
+
+  // The navbar should not be rendered if there is an authenticated user, if the authentication state is still loading, or if the current path is "/auth"
+  // const canRenderNavbar = !user && !loading && pathname !== "/auth";
+  const canRenderNavbar = !user && pathname !== "/auth";
 
   const checkingUserIsAuth = !user && loading;
   if (checkingUserIsAuth) return <PageLayoutSpinner />;
