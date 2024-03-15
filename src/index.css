@@ -1,19 +1,15 @@
-/* Set the width of the scrollbar */
-::-webkit-scrollbar{
-  width: 10px;
+::-webkit-scrollbar {
+	width: 10px;
 }
 
-/* Set the background color of the scrollbar track */
-::-webkit-scrollbar-track{
-  background: #1e1e24;
+::-webkit-scrollbar-track {
+	background: #1e1e24;
 }
 
-/* Set the background color of the scrollbar thumb (the part you drag) */
-::-webkit-scrollbar-thumb{
-  background: #3f3f40;
+::-webkit-scrollbar-thumb {
+	background: #3f3f40;
 }
 
-/* Change the background color of the scrollbar thumb when it's hovered over */
 ::-webkit-scrollbar-thumb:hover {
-  background: #555;
+	background: #555;
 }
